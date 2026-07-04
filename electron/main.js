@@ -901,9 +901,7 @@ function setupAutoUpdater() {
   });
 
   autoUpdater.on('download-progress', (progressObj) => {
-    let log_message = "Đang tải bản cập nhật: " + progressObj.percent.toFixed(2) + "%";
-    log_message = log_message + ' (' + (progressObj.transferred / 1024 / 1024).toFixed(2) + 'MB/' + (progressObj.total / 1024 / 1024).toFixed(2) + 'MB)';
-    pushLog(log_message);
+    // Chạy ngầm hoàn toàn, không spam log trên giao diện
   });
 
   autoUpdater.on('update-downloaded', (info) => {
