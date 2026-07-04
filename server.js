@@ -395,6 +395,33 @@ function createLocalServiceManager(options = {}) {
     restart,
     startAll,
     stopAll,
+    forceKillAll: async () => {
+      for (const name of Object.keys(handles)) {
+        const handle = handles[name];
+        const child = handle?.child;
+        if (child && child.exitCode === null && child.signalCode === null) {
+          try {
+            child.kill('SIGKILL');
+          } catch (e) {}
+        }
+        handles[name] = null;
+      }
+      for (const name of Object.keys(serviceConfig)) {
+        const config = serviceConfig[name];
+        if (config.port) {
+          try {
+            const pids = await listeningPidsOnPort(config.port);
+            for (const pid of pids) {
+              if (pid && pid !== process.pid) {
+                try {
+                  process.kill(pid, 'SIGKILL');
+                } catch (e) {}
+              }
+            }
+          } catch (e) {}
+        }
+      }
+    },
     clearLogs: () => {
       logs.length = 0;
     }

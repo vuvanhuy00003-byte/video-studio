@@ -958,9 +958,9 @@ if (!gotSingleInstanceLock) {
     if (isQuitting) return;
     isQuitting = true;
     event.preventDefault();
-    pushLog('Đang dừng giao diện web và toàn bộ dịch vụ local...');
+    pushLog('Đang dừng cưỡng bức các dịch vụ local và server...');
     Promise.resolve()
-      .then(() => serverHandle?.localServices?.stopAll())
+      .then(() => serverHandle?.localServices?.forceKillAll())
       .then(() => serverHandle?.close())
       .then(async () => {
         if (serverHandle?.external) {
