@@ -1,0 +1,377 @@
+{
+  "version": "escbase-inspired-v1",
+  "source": "Summarized from the escbase template workflow, starter modules, and visual-pattern notes.",
+  "globalRules": {
+    "safeZone": "For 9:16, keep important content inside padding top 100px, left/right 28px, bottom 200px.",
+    "visualFirst": "Voiceover/subtitles carry explanation. Canvas should use short labels, icons, metrics, source media, diagrams, and motion.",
+    "revealMapping": "Each narration sentence or SRT beat should map to one semantic reveal: one metric, card, icon, media focus, or diagram step.",
+    "textDensity": "Avoid paragraphs. Prefer 1-5 word labels, numbers, logos, and symbols. Do not copy the full narration.",
+    "composition": "Fill the safe area with one strong visual idea. Avoid sparse scenes and repeated card stacks.",
+    "assets": "Use only local media catalog src values. Prefer brand/logo assets when a brand or product is named.",
+    "sourceDiscipline": "Separate verified source facts from commentary or opinion. When a number comes from a company post, README, or article, phrase it as source-reported unless independently verified."
+  },
+  "qualityGates": {
+    "script": [
+      "Hook must make the topic clear in the first beat.",
+      "Each scene should carry one central idea; split the scene if it needs multiple explanations.",
+      "Each sentence should carry one revealable idea and read naturally in the selected video language.",
+      "Do not overclaim source facts; distinguish source-reported facts from analysis, market interpretation, or community reaction.",
+      "Final scene should end with a concrete verdict, warning, or useful next thought, not an empty slogan."
+    ],
+    "visualPlan": [
+      "For every scene, state why selectedPattern fits the narration.",
+      "Add a visualTwist: a composition, metaphor, motion, or source-media treatment specific to this story.",
+      "Avoid repeating the same card stack on adjacent scenes.",
+      "Prefer brand marks, product logos, source screenshots, metrics, diagrams, and icons over restating narration."
+    ],
+    "html": [
+      "Final visible state must remain on screen until scene end.",
+      "No important text or focal visual may enter the bottom subtitle gap.",
+      "Canvas text must be short labels in the selected video language, not paragraphs.",
+      "If using local media, make it large enough to inspect and do not cover it with explanatory text."
+    ]
+  },
+  "runtimeDesign": {
+    "themeMoods": [
+      {
+        "id": "market-neon",
+        "useWhen": ["finance", "market dashboard", "crypto", "exchange"],
+        "tokens": { "primary": "#ffb000", "accent": "#38bdf8", "success": "#22c55e", "danger": "#ef4444", "bg": "#07111e" },
+        "notes": "Premium market board: dark base, amber highlights, cyan data accents, green/red state semantics."
+      },
+      {
+        "id": "terminal-green",
+        "useWhen": ["developer", "CLI", "agent", "system internals"],
+        "tokens": { "primary": "#22c55e", "accent": "#94a3b8", "success": "#22c55e", "danger": "#ef4444", "bg": "#020617" },
+        "notes": "Quiet terminal/system mood; good for terminal-card, cpu-chip, data-stream."
+      },
+      {
+        "id": "creator-orange-blue",
+        "useWhen": ["product launch", "creator tool", "workflow explainer"],
+        "tokens": { "primary": "#ff6a00", "accent": "#8fa8ff", "success": "#68f2b4", "danger": "#fb7185", "bg": "#07111e" },
+        "notes": "Escbase starter-like contrast: warm hero accent plus cool technical secondary."
+      },
+      {
+        "id": "minimal-gold",
+        "useWhen": ["premium proof", "finance verdict", "closing thesis"],
+        "tokens": { "primary": "#f5c542", "accent": "#ffffff", "success": "#a3e635", "danger": "#f97316", "bg": "#090807" },
+        "notes": "Use sparingly for final-lockup, proof-frame, or high-stakes verdict."
+      }
+    ],
+    "backgroundFx": [
+      { "id": "particles", "useWhen": ["general premium motion", "hero", "market energy"], "notes": "Small low-opacity particles, never distract from main visual." },
+      { "id": "scan", "useWhen": ["source/proof", "system running", "dashboard"], "notes": "Soft scan lines or panels; keep behind content." },
+      { "id": "flow", "useWhen": ["pipeline", "workflow", "data moving between components"], "notes": "Directional light streams or curved paths that make process movement visible." },
+      { "id": "rings", "useWhen": ["orbit", "identity", "highlight"], "notes": "Radial rings around a central mark or icon." },
+      { "id": "lorenz", "useWhen": ["agent orchestration", "complex systems", "many moving decisions"], "notes": "Elegant attractor-like motion; keep thin and decorative behind the main composition." },
+      { "id": "noise", "useWhen": ["risk", "uncertainty", "legal warning"], "notes": "Subtle grain/noise, not dirty or low-quality." },
+      { "id": "none", "useWhen": ["dense proof media", "demo video"], "notes": "Use clean background when media must be inspected." }
+    ],
+    "revealModes": [
+      { "id": "normal", "useWhen": ["linear reveal of 1-4 main elements"], "mapping": "One revealBeat per visual change." },
+      { "id": "highlight", "useWhen": ["one base visual plus 2-3 highlighted modules"], "mapping": "Base visual first, then each highlighted card/module." },
+      { "id": "traffic-light", "useWhen": ["red/yellow/green states"], "mapping": "Base visual first, then red, yellow, green states." }
+    ],
+    "sfxCues": [
+      { "id": "gong", "family": "transition", "useWhen": ["big scene open", "important reveal", "premium transition"] },
+      { "id": "rise", "family": "transition", "useWhen": ["positive build", "upward move", "setup into next idea"] },
+      { "id": "sweep", "useWhen": ["scene transition", "arrow movement", "timeline line draw"] },
+      { "id": "boom", "family": "transition", "useWhen": ["shock", "market drop", "major risk"] },
+      { "id": "alarm", "family": "transition", "useWhen": ["warning", "legal risk", "red state"] },
+      { "id": "chord", "family": "transition", "useWhen": ["thesis reveal", "chapter shift", "premium confirmation"] },
+      { "id": "ascending", "family": "transition", "useWhen": ["step-up sequence", "growth", "progress"] },
+      { "id": "retro", "family": "transition", "useWhen": ["playful tech beat", "old/new contrast"] },
+      { "id": "minimal", "family": "transition", "useWhen": ["quiet transition", "proof media", "low distraction"] },
+      { "id": "dramatic", "family": "transition", "useWhen": ["opening hook", "strong verdict", "market shock"] },
+      { "id": "ping", "family": "reveal", "useWhen": ["small label", "status chip", "single dot"] },
+      { "id": "pop", "useWhen": ["metric/card appears", "badge reveal"] },
+      { "id": "click", "family": "reveal", "useWhen": ["terminal line", "UI action", "small switch"] },
+      { "id": "bubble", "family": "reveal", "useWhen": ["chat bubble", "community reaction", "soft idea"] },
+      { "id": "woosh", "family": "reveal", "useWhen": ["card slide", "packet movement", "quick flow"] },
+      { "id": "drop", "family": "reveal", "useWhen": ["negative move", "falling price", "risk appears"] },
+      { "id": "tick", "useWhen": ["timeline step", "counting metric", "checklist"] },
+      { "id": "bell", "family": "reveal", "useWhen": ["source proof", "final note", "soft confirmation"] },
+      { "id": "blip", "family": "reveal", "useWhen": ["data packet", "terminal status", "tiny tech cue"] },
+      { "id": "snap", "family": "reveal", "useWhen": ["fast cut", "hard contrast", "attention point"] },
+      { "id": "sparkle", "useWhen": ["positive reveal", "success state", "hero polish"] },
+      { "id": "bass", "useWhen": ["risk reveal", "legal warning", "market shock"] },
+      { "id": "chime", "useWhen": ["final verdict", "source proof", "soft confirmation"] }
+    ]
+  },
+  "patterns": [
+    {
+      "id": "hero-orbit",
+      "category": "hook",
+      "useWhen": ["opening hook", "ecosystem around one product", "brand/product launch", "tool stack", "many items connected to one core"],
+      "avoidWhen": ["risk explanation", "dense proof", "linear step-by-step process"],
+      "components": ["orbit-ring", "central-core-logo", "orbit-chip", "kinetic-title", "short-stat-row"],
+      "requiredSlots": ["coreLabelOrLogo", "chips"],
+      "optionalSlots": ["heroMetric", "sourceTag"],
+      "motion": ["counter-rotating rings", "core pulse", "chips bob or reveal around orbit"],
+      "htmlHints": "Use a large central visual in the middle third. Keep chips short and readable. Scene 1 should usually use one hero element plus hook, not a full explainer.",
+      "exampleUse": "Binance at center, US stock tickers and stablecoin chips orbit around it."
+    },
+    {
+      "id": "split-panel",
+      "category": "comparison",
+      "useWhen": ["before vs after", "traditional vs web3", "promise vs risk", "two competitors or lanes"],
+      "avoidWhen": ["single fact", "three or more process steps"],
+      "components": ["left-lane", "right-lane", "center-arrow-or-divider", "lane-badge", "contrast-glow"],
+      "requiredSlots": ["leftLabel", "rightLabel"],
+      "optionalSlots": ["leftIcon", "rightIcon", "transitionLabel"],
+      "motion": ["left lane reveal", "right lane reveal", "arrow sweep"],
+      "htmlHints": "Each lane should contain a keyword, icon/logo, and one short supporting label. Do not put paragraphs inside lanes.",
+      "exampleUse": "Wall Street/traditional finance lane versus Web3/blockchain finance lane."
+    },
+    {
+      "id": "workflow-grid",
+      "category": "process",
+      "useWhen": ["multi-step process", "pipeline", "tokenization flow", "how it works", "sequence of actions"],
+      "avoidWhen": ["one metric", "hook slide"],
+      "components": ["workflow-step", "step-number", "connector-line", "flow-arrow", "active-step-glow"],
+      "requiredSlots": ["steps"],
+      "optionalSlots": ["resultBadge", "sourceTag"],
+      "motion": ["steps light up in order", "connector sweep", "final step glow"],
+      "htmlHints": "Use 3-4 steps max. Each step should have a number/icon and short label. If text becomes long, split scene or move detail to narration.",
+      "exampleUse": "Real stock asset -> bStocks token -> DeFi borrowing/liquidity."
+    },
+    {
+      "id": "metric-card",
+      "category": "metrics",
+      "useWhen": ["one hero number", "price", "fee", "minimum order", "benchmark highlight"],
+      "avoidWhen": ["needs source screenshot", "no memorable number"],
+      "components": ["hero-number", "metric-label", "secondary-pill", "micro-proof-row"],
+      "requiredSlots": ["metricValue", "metricLabel"],
+      "optionalSlots": ["secondaryMetric", "proofLabel", "partnerLogos"],
+      "motion": ["number pop", "counter optional", "supporting pill reveal"],
+      "htmlHints": "Make the number dominant. Supporting text must be much smaller. One scene should not contain more than 3 metrics.",
+      "exampleUse": "$5 minimum order and 0% trading fee."
+    },
+    {
+      "id": "metric-grid",
+      "category": "metrics",
+      "useWhen": ["2-4 numbers", "benchmark table", "feature stats"],
+      "avoidWhen": ["one number deserves full focus"],
+      "components": ["metric-tile", "number", "label", "grid-glow"],
+      "requiredSlots": ["metrics"],
+      "optionalSlots": ["groupLabel"],
+      "motion": ["tiles reveal staggered", "numbers count up"],
+      "htmlHints": "Use 2x2 or vertical 3-card grid for 9:16. Each tile is number + label only.",
+      "exampleUse": "35% cheaper, 59% fewer tokens, 49% faster, 70% fewer calls."
+    },
+    {
+      "id": "perf-compare",
+      "category": "metrics",
+      "useWhen": ["before/after benchmark", "cost comparison", "speed comparison", "model/tool comparison"],
+      "avoidWhen": ["single hero number", "no numeric contrast"],
+      "components": ["compare-row", "label", "bar-track", "animated-bar", "value"],
+      "requiredSlots": ["rows"],
+      "optionalSlots": ["winnerLabel", "unit"],
+      "motion": ["bars grow by reveal", "winner glow", "value count optional"],
+      "htmlHints": "Use 2-4 rows max. Labels must be short. Do not create a dense table; the bar lengths should tell the story.",
+      "exampleUse": "ETF inflow vs outflow, stock index vs crypto index, fee before vs after."
+    },
+    {
+      "id": "model-badge-card",
+      "category": "identity",
+      "useWhen": ["introducing a tool/model/provider", "default choice", "product identity", "service badge"],
+      "avoidWhen": ["process flow", "many unrelated brands"],
+      "components": ["badge-card", "model-icon", "name", "provider", "status-tag"],
+      "requiredSlots": ["name"],
+      "optionalSlots": ["provider", "status", "icon"],
+      "motion": ["badge scale in", "status pulse", "icon ring"],
+      "htmlHints": "Good as a focused identity block. Keep the provider/status secondary and avoid long descriptions.",
+      "exampleUse": "One Binance product badge with a small 'Tokenized stocks' status tag."
+    },
+    {
+      "id": "traffic-light",
+      "category": "risk",
+      "useWhen": ["risk/unknown/upside", "legal warning", "sentiment classification", "three states"],
+      "avoidWhen": ["simple process", "pure celebratory hook"],
+      "components": ["red-state", "yellow-state", "green-state", "traffic-housing-or-risk-cards"],
+      "requiredSlots": ["red", "yellow", "green"],
+      "optionalSlots": ["timelineLabels"],
+      "motion": ["red reveal", "yellow reveal", "green reveal", "pulse active state"],
+      "htmlHints": "Each state must have a short label and icon. Use red/yellow/green semantics clearly. Do not make warning text tiny.",
+      "exampleUse": "2021 stopped by legal pressure -> uncertainty -> 2024 upgraded comeback."
+    },
+    {
+      "id": "risk-cards",
+      "category": "risk",
+      "useWhen": ["2-3 caveats", "warnings without traffic-light sequence", "trade-offs"],
+      "avoidWhen": ["strong three-state traffic-light story"],
+      "components": ["caveat-card", "risk-icon", "short-label"],
+      "requiredSlots": ["cards"],
+      "optionalSlots": ["severity"],
+      "motion": ["cards slide in", "icon pulse"],
+      "htmlHints": "Card text should stay under two lines. Keep risk cards high enough above subtitle zone.",
+      "exampleUse": "Legal risk, market risk, liquidity risk."
+    },
+    {
+      "id": "proof-frame",
+      "category": "proof",
+      "useWhen": ["screenshot proof", "receipt", "source artifact", "tweet/image is the point"],
+      "avoidWhen": ["no local media", "abstract concept only"],
+      "components": ["media-frame", "source-pill", "focus-ring", "caption-chip"],
+      "requiredSlots": ["mediaAsset"],
+      "optionalSlots": ["sourceLabel", "highlightRegion"],
+      "motion": ["media scale-in", "focus ring pulse"],
+      "htmlHints": "Make source media large and clean. Do not cover it with explanatory text. Attribution should be short.",
+      "exampleUse": "A Binance announcement screenshot shown as source proof."
+    },
+    {
+      "id": "demo-media",
+      "category": "media",
+      "useWhen": ["product demo video", "app/browser/phone recording", "source media should be inspected"],
+      "avoidWhen": ["media is decorative only"],
+      "components": ["demo-frame", "browser-or-phone-shell", "playback-strip", "source-pill"],
+      "requiredSlots": ["videoOrImageAsset"],
+      "optionalSlots": ["deviceType", "sourceLabel"],
+      "motion": ["frame reveal", "subtle zoom", "playback progress"],
+      "htmlHints": "Use local media only. Keep demo large. Do not add backstage labels like downloaded/muted/local file.",
+      "exampleUse": "A captured demo of an app or exchange UI."
+    },
+    {
+      "id": "terminal-card",
+      "category": "developer",
+      "useWhen": ["CLI command", "API call", "agent action", "build/test output"],
+      "avoidWhen": ["non-technical audience with no command/action"],
+      "components": ["terminal-bar", "command-line", "output-line", "success-state"],
+      "requiredSlots": ["command", "output"],
+      "optionalSlots": ["title"],
+      "motion": ["typing", "success check fade-in"],
+      "htmlHints": "Use monospace for terminal only. Keep commands short and legible.",
+      "exampleUse": "npm install, API request, render command."
+    },
+    {
+      "id": "speed-gauge",
+      "category": "metrics",
+      "useWhen": ["speed", "latency", "performance improvement", "faster/slower"],
+      "avoidWhen": ["money metric", "legal risk"],
+      "components": ["gauge-arc", "needle", "center-icon", "speed-label"],
+      "requiredSlots": ["label"],
+      "optionalSlots": ["beforeValue", "afterValue"],
+      "motion": ["needle sweep", "arc glow"],
+      "htmlHints": "The gauge is the visual. Put only one short number/label beside it.",
+      "exampleUse": "Render speed or transaction speed improvement."
+    },
+    {
+      "id": "data-stream",
+      "category": "process",
+      "useWhen": ["data movement", "pipeline", "streaming", "integration"],
+      "avoidWhen": ["static brand hook"],
+      "components": ["stream-pipe", "data-packets", "status-chip", "caption"],
+      "requiredSlots": ["from", "to"],
+      "optionalSlots": ["status"],
+      "motion": ["packets move through pipe", "status glow"],
+      "htmlHints": "Good for invisible backend flow. Use labels sparingly.",
+      "exampleUse": "Stablecoin value moving into tokenized stock market access."
+    },
+    {
+      "id": "cpu-chip",
+      "category": "system",
+      "useWhen": ["model internals", "compute", "cache", "memory", "engine", "infrastructure"],
+      "avoidWhen": ["finance/legal story without system metaphor", "human/community reaction"],
+      "components": ["chip-body", "chip-pins", "chip-core", "scan-line", "chip-label"],
+      "requiredSlots": ["coreLabel"],
+      "optionalSlots": ["caption", "signals"],
+      "motion": ["scan line", "pin glow", "core pulse"],
+      "htmlHints": "Use as a metaphor for backend/system mechanics. One short caption only; let the visual carry the technical feel.",
+      "exampleUse": "An engine-like chip showing tokenization or settlement infrastructure."
+    },
+    {
+      "id": "connector-board",
+      "category": "process",
+      "useWhen": ["integrations", "multiple sources feeding one system", "connectors/plugins", "market lanes"],
+      "avoidWhen": ["single fact", "linear old-to-new shift"],
+      "components": ["connector-card", "status-dot", "central-node", "glow-line"],
+      "requiredSlots": ["connectors"],
+      "optionalSlots": ["centralLabel", "status"],
+      "motion": ["connectors glow in sequence", "status dots blink", "lines pulse toward center"],
+      "htmlHints": "Use 3-5 connectors max. Each connector is icon plus 1-3 words. Good alternative to repetitive cards.",
+      "exampleUse": "Stablecoin, stocks, DeFi, and exchange access connecting into one Binance lane."
+    },
+    {
+      "id": "community-bubbles",
+      "category": "reaction",
+      "useWhen": ["comments", "community reaction", "social proof", "debate"],
+      "avoidWhen": ["no reaction/source comment exists"],
+      "components": ["chat-bubble", "avatar", "left-right-stack", "sentiment-tag"],
+      "requiredSlots": ["messages"],
+      "optionalSlots": ["platform"],
+      "motion": ["bubbles float in", "avatar glow"],
+      "htmlHints": "Each bubble is one short idea. Avoid fake quotes unless source provides them.",
+      "exampleUse": "Mixed market reactions to Binance bStocks."
+    },
+    {
+      "id": "traffic-light-pole",
+      "category": "risk",
+      "useWhen": ["three risk states need a strong visual metaphor", "red/yellow/green timeline", "regulatory comeback"],
+      "avoidWhen": ["only two caveats", "non-risk process"],
+      "components": ["traffic-housing", "red-lamp", "yellow-lamp", "green-lamp", "state-labels"],
+      "requiredSlots": ["red", "yellow", "green"],
+      "optionalSlots": ["headline"],
+      "motion": ["lamps light up in order", "active lamp pulse", "labels reveal with lamp"],
+      "htmlHints": "Use when traffic-light should look like a real object, not just cards. Labels must be short and aligned with the lamps.",
+      "exampleUse": "Regulatory stop -> uncertainty -> controlled relaunch."
+    },
+    {
+      "id": "timeline-pulse",
+      "category": "process",
+      "useWhen": ["history", "roadmap", "old-to-new progression", "events over time"],
+      "avoidWhen": ["no time sequence", "pure metric slide"],
+      "components": ["timeline-line", "pulse-dot", "timeline-item", "date-label"],
+      "requiredSlots": ["events"],
+      "optionalSlots": ["currentEvent"],
+      "motion": ["dots pulse by reveal", "line draw", "current event glow"],
+      "htmlHints": "Use 3-4 events max. Keep dates/labels short; do not turn it into a text-heavy history slide.",
+      "exampleUse": "2021 pause, 2024 comeback, 2026 product expansion."
+    },
+    {
+      "id": "kinetic-grid",
+      "category": "background",
+      "useWhen": ["system running", "tech hook", "market dashboard mood", "needs subtle motion behind a central visual"],
+      "avoidWhen": ["proof media needs clean inspection", "already visually dense scene"],
+      "components": ["scan-panel", "grid-lines", "central-overlay"],
+      "requiredSlots": ["centralVisual"],
+      "optionalSlots": ["statusChips"],
+      "motion": ["slow grid drift", "scan sweep", "low-opacity status blink"],
+      "htmlHints": "This is a supporting pattern, not the whole slide. Keep opacity low so text/media stays readable.",
+      "exampleUse": "A market-system background behind a Binance or stock-token hero mark."
+    },
+    {
+      "id": "compare-board",
+      "category": "comparison",
+      "useWhen": ["reference vs output", "target vs current state", "inspect/refine loop", "two artifacts compared"],
+      "avoidWhen": ["no visible artifacts", "simple before/after label is enough"],
+      "components": ["target-card", "output-card", "connector", "feedback-ribbon"],
+      "requiredSlots": ["left", "right"],
+      "optionalSlots": ["feedback"],
+      "motion": ["cards reveal staggered", "connector draw", "feedback ribbon sweep"],
+      "htmlHints": "Use when the visual comparison matters. Keep each card mostly graphic; feedback text should be one short phrase.",
+      "exampleUse": "Traditional broker screen vs tokenized-stock exchange screen."
+    },
+    {
+      "id": "final-lockup",
+      "category": "conclusion",
+      "useWhen": ["closing thesis", "CTA", "source attribution", "final verdict"],
+      "avoidWhen": ["middle explanatory scene"],
+      "components": ["central-mark", "verdict-line", "source-tag", "cta-pill"],
+      "requiredSlots": ["verdict"],
+      "optionalSlots": ["brandLogo", "sourceLabel", "cta"],
+      "motion": ["central mark glow", "verdict reveal", "source tag reveal"],
+      "htmlHints": "The final line should be memorable and short. Do not end with a generic slogan if risk/context matters.",
+      "exampleUse": "Balanced warning plus follow/update CTA."
+    }
+  ],
+  "selectionGuide": [
+    { "intent": "Opening hook with brand/product", "prefer": ["hero-orbit", "model-badge-card", "kinetic-grid", "proof-frame"] },
+    { "intent": "Comparison or competition", "prefer": ["split-panel", "compare-board", "workflow-grid"] },
+    { "intent": "How it works", "prefer": ["workflow-grid", "data-stream", "connector-board", "cpu-chip"] },
+    { "intent": "Numbers or cost", "prefer": ["metric-card", "metric-grid", "perf-compare", "speed-gauge"] },
+    { "intent": "Evidence/source/demo", "prefer": ["proof-frame", "demo-media"] },
+    { "intent": "Risk/legal/sentiment", "prefer": ["traffic-light", "traffic-light-pole", "risk-cards", "community-bubbles"] },
+    { "intent": "History or roadmap", "prefer": ["timeline-pulse", "traffic-light-pole", "workflow-grid"] },
+    { "intent": "Closing", "prefer": ["final-lockup"] }
+  ]
+}

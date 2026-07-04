@@ -1,0 +1,140 @@
+{
+  "name": "video-studio",
+  "version": "1.0.1",
+  "description": "NodeJS modular video generation app with resumable pipeline",
+  "main": "electron/main.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "tool vibe": "electron .",
+    "flowkit:setup": "cd flowkit && bash setup.sh",
+    "flowkit:setup:packaged": "node scripts/setup-flowkit.js",
+    "flowkit:start": "cd flowkit && source venv/bin/activate && python -m agent.main",
+    "flowkit:test": "cd flowkit && venv/bin/python -m pytest -q",
+    "omnivoice:setup": "node scripts/setup-omnivoice.js",
+    "omnivoice:start": "node scripts/start-omnivoice.js",
+    "prepare:vendor": "node scripts/prepare-vendor.js && node scripts/prepare-vendor-tools.js && node scripts/prepare-vendor-whisper.js",
+    "prepare:vendor:mac": "node scripts/prepare-vendor.js mac_arm && node scripts/prepare-vendor-tools.js darwin-arm64 && node scripts/prepare-vendor-whisper.js darwin-arm64 && npm run flowkit:setup:packaged && npm run omnivoice:setup",
+    "prepare:vendor:win": "node scripts/prepare-vendor.js win64 && node scripts/prepare-vendor-tools.js win32-x64 && node scripts/prepare-vendor-whisper.js win32-x64 && npm run flowkit:setup:packaged && npm run omnivoice:setup",
+    "prepare:vendor-whisper": "node scripts/prepare-vendor-whisper.js",
+    "dist:mac": "npm run prepare:vendor:mac && electron-builder --mac dmg --arm64",
+    "dist:mac:signed": "npm run prepare:vendor:mac && electron-builder --mac dmg --arm64 --config.mac.identity=\"$CSC_NAME\"",
+    "dist:win": "npm run prepare:vendor:win && electron-builder --win nsis --x64 --publish never"
+  },
+  "dependencies": {
+    "9router": "^0.5.4",
+    "express": "^4.21.2",
+    "ffmpeg-static": "^5.3.0",
+    "ffprobe-static": "npm:@derhuerst/ffprobe-static@^5.3.0",
+    "hyperframes": "^0.4.43",
+    "multer": "^1.4.5-lts.1",
+    "puppeteer-core": "^24.42.0",
+    "electron-updater": "^6.1.4"
+  },
+  "devDependencies": {
+    "@puppeteer/browsers": "^2.13.1",
+    "electron": "^42.0.1",
+    "electron-builder": "^26.8.1"
+  },
+  "build": {
+    "appId": "com.kstudio.video.standalone.v20260616",
+    "productName": "Video Studio",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "vuvanhuy00003-byte",
+        "repo": "video-studio"
+      }
+    ],
+    "asar": false,
+    "afterPack": "scripts/after-pack.js",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**/*",
+      "scripts/prepare-vendor.js",
+      "scripts/prepare-vendor-tools.js",
+      "scripts/prepare-vendor-whisper.js",
+      "scripts/after-pack.js",
+      "scripts/setup-flowkit.js",
+      "scripts/setup-omnivoice.js",
+      "scripts/start-omnivoice.js",
+      "server.js",
+      "src/**/*",
+      "src/python/**/*",
+      "public/**/*",
+      "assets/**/*",
+      "node_modules/9router/app/node_modules/**/*",
+      "vendor/chrome/**/*",
+      "vendor/python/**/*",
+      "vendor/tools/**/*",
+      "vendor/whisper/**/*",
+      "vendor/omnivoice/**/*",
+      "flowkit/agent/**/*",
+      "flowkit/extension/**/*",
+      "flowkit/requirements.txt",
+      "flowkit/venv/**/*",
+      "package.json",
+      "!node_modules/ffmpeg-static/ffmpeg*",
+      "!node_modules/ffprobe-static/ffprobe*",
+      "!projects/**/*",
+      "!storage/**/*",
+      "!tmp/**/*",
+      "!flowkit/output/**/*",
+      "!flowkit/.pytest_cache/**/*",
+      "!flowkit/**/__pycache__/**/*",
+      "!vendor/omnivoice/**/__pycache__/**/*",
+      "!dist/**/*",
+      "!*.dmg"
+    ],
+    "mac": {
+      "category": "public.app-category.video",
+      "identity": "-",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}-${version}-Setup-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Video Studio",
+      "include": "installer/installer.nsh"
+    },
+    "dmg": {
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    }
+  }
+}

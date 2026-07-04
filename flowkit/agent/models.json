@@ -1,0 +1,55 @@
+{
+  "video_models": {
+    "PAYGATE_TIER_TWO": {
+      "frame_2_video": {
+        "VIDEO_ASPECT_RATIO_LANDSCAPE": "veo_3_1_lite",
+        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_lite_low_priority"
+      },
+      "start_end_frame_2_video": {
+        "VIDEO_ASPECT_RATIO_LANDSCAPE": "veo_3_1_lite",
+        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_lite_low_priority"
+      },
+      "reference_frame_2_video": {
+        "VIDEO_ASPECT_RATIO_LANDSCAPE": "veo_3_1_lite",
+        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_lite_low_priority"
+      }
+    },
+    "PAYGATE_TIER_ONE": {
+      "frame_2_video": {
+        "VIDEO_ASPECT_RATIO_LANDSCAPE": "veo_3_1_lite",
+        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_lite_low_priority"
+      },
+      "start_end_frame_2_video": {
+        "VIDEO_ASPECT_RATIO_LANDSCAPE": "veo_3_1_lite",
+        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_lite_low_priority"
+      },
+      "reference_frame_2_video": {
+        "VIDEO_ASPECT_RATIO_LANDSCAPE": "veo_3_1_lite",
+        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_lite_low_priority"
+      }
+    },
+    "PAYGATE_TIER_NOT_PAID": {
+      "frame_2_video": {
+        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_lite",
+        "VIDEO_ASPECT_RATIO_LANDSCAPE": "veo_3_1_lite"
+      },
+      "start_end_frame_2_video": {
+        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_lite",
+        "VIDEO_ASPECT_RATIO_LANDSCAPE": "veo_3_1_lite"
+      },
+      "reference_frame_2_video": {
+        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_lite",
+        "VIDEO_ASPECT_RATIO_LANDSCAPE": "veo_3_1_lite"
+      }
+    }
+  },
+  "upscale_models": {
+    "VIDEO_RESOLUTION_4K": "veo_3_1_upsampler_4k",
+    "VIDEO_RESOLUTION_1080P": "veo_3_1_upsampler_1080p"
+  },
+  "image_models": {
+    "NANO_BANANA_PRO": "narwhal_display",
+    "NANO_BANANA_2": "narwhal_display",
+    "IMAGEN_4": "imagen_4"
+  }
+}

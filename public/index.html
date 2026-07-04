@@ -1,0 +1,846 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Studio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <!-- DARK SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <div>
+            <span class="brand-kicker">Studio vận hành</span>
+            <strong>Video Studio</strong>
+          </div>
+          <div class="brand-actions">
+            <button id="open-settings" type="button" class="btn-settings-top">Cài đặt</button>
+          </div>
+        </div>
+
+        <!-- Main script / topic input -->
+        <div class="sidebar-top">
+          <textarea id="inputText" rows="7"
+            placeholder="Nhập văn bản, JSON hoặc URL. Để tạo nhiều video, ngăn mỗi nội dung bằng 7 dấu #: #######"></textarea>
+          <div class="crawl-row">
+            <input id="crawlUrl" type="url" class="dark-input" placeholder="Dán URL bài viết, Reels, YouTube, TikTok..." />
+            <button id="btn-crawl-url" type="button" class="btn-secondary">Crawl</button>
+          </div>
+          <div id="crawl-status" class="estimate-text"></div>
+          <p class="hint-text">Tự nhận diện văn bản, <a href="#" id="show-json-sample" class="hint-link">JSON hợp lệ</a>, URL bài viết và URL YouTube/TikTok/Facebook. Dùng ####### để tạo nhiều video.</p>
+        </div>
+
+        <!-- Project creation form -->
+        <form id="project-form" class="sidebar-form">
+          <!-- Hidden file inputs triggered by buttons -->
+          <input id="logoFile" type="file" accept="image/*" style="display:none" />
+          <input id="backgroundMusic" type="file" accept="audio/*" multiple style="display:none" />
+          <input id="introVideo" type="file" accept="video/*" style="display:none" />
+          <input id="outroVideo" type="file" accept="video/*" style="display:none" />
+          <input id="htmlMedia" type="file" accept="image/*,video/*,audio/*" multiple style="display:none" />
+          <input id="defaultHtmlSfxFiles" type="file" accept="audio/*" multiple style="display:none" />
+          <input id="htmlBrandAssetFiles" type="file" accept="image/*" multiple style="display:none" />
+
+          <div class="sidebar-section" style="margin-bottom: 1.25rem;">
+            <div class="section-label">THƯ MỤC DỰ ÁN</div>
+            <select id="project-group-select" class="dark-select">
+              <option value="">(Không phân nhóm)</option>
+            </select>
+          </div>
+
+          <div class="sidebar-tabs" role="tablist" aria-label="Cấu hình tạo video">
+            <button type="button" class="sidebar-tab active" data-sidebar-tab="content">Nội dung</button>
+            <button type="button" class="sidebar-tab" data-sidebar-tab="image">Hình ảnh</button>
+            <button type="button" class="sidebar-tab" data-sidebar-tab="voice">Giọng đọc</button>
+            <button type="button" class="sidebar-tab" data-sidebar-tab="subtitle">Bổ sung</button>
+          </div>
+
+          <div class="sidebar-tab-panel active" data-sidebar-panel="content">
+            <div class="sidebar-section">
+              <div class="section-label">NHỊP VIDEO</div>
+              <div class="grid-2">
+                <div>
+                  <div class="sub-label">Độ dài video</div>
+                  <select id="videoDurationSec" class="dark-select">
+                    <option value="30">30 giây</option>
+                    <option value="60">1 phút</option>
+                    <option value="120">2 phút</option>
+                    <option value="180">3 phút</option>
+                    <option value="300">5 phút</option>
+                    <option value="420">7 phút</option>
+                    <option value="600">10 phút</option>
+                    <option value="720">12 phút</option>
+                    <option value="900">15 phút</option>
+                    <option value="free" selected>Độ dài tự do — AI tự quyết định</option>
+                  </select>
+                </div>
+                <div>
+                  <div class="sub-label">Nhịp cảnh</div>
+                  <select id="sceneDurationSec" class="dark-select">
+                    <option value="auto" selected>Nhịp cảnh tự do — theo nội dung</option>
+                    <option value="5">5 giây</option>
+                    <option value="10">10 giây</option>
+                    <option value="15">15 giây</option>
+                    <option value="20">20 giây</option>
+                  </select>
+                </div>
+              </div>
+              <div class="estimate-text" id="estimate-text">AI tự quyết định tổng thời lượng, số cảnh và nhịp kể dựa trên nội dung nhập vào.</div>
+            </div>
+          </div>
+
+          <div class="sidebar-tab-panel" data-sidebar-panel="image">
+            <div class="sidebar-section">
+              <div class="section-label">NGUỒN ẢNH</div>
+              <select id="imageSource" class="dark-select"></select>
+            </div>
+            <div class="sidebar-section" data-image-ai-only>
+              <div class="section-label">ẢNH THAM CHIẾU <span class="section-opt">(URL / file)</span></div>
+              <input id="referenceImageUrl" type="url" class="dark-input" placeholder="Dán link ảnh tham chiếu nhân vật..." />
+              <div class="logo-row">
+                <span class="logo-name" id="reference-image-display">Chưa chọn file</span>
+                <button type="button" class="btn-ghost-xs" id="btn-change-reference-image">Chọn file</button>
+              </div>
+              <input id="referenceImageFile" type="file" accept="image/*" hidden />
+            </div>
+            <div class="sidebar-section">
+              <div class="section-label">TỈ LỆ KHUNG HÌNH</div>
+              <select id="aspectRatio" class="dark-select"></select>
+            </div>
+            <div class="sidebar-section" data-html-media-section hidden>
+              <div class="section-label">MEDIA CHO HTML <span class="section-dim">(SFX / ảnh / video)</span></div>
+              <div class="logo-row">
+                <span class="logo-name" id="html-media-display">Chưa có media</span>
+                <button type="button" class="btn-ghost-xs" id="btn-change-html-media">Chọn file</button>
+              </div>
+              <div class="estimate-text">Đặt tên file tự mô tả để AI biết nên dùng ở đâu trong cảnh.</div>
+            </div>
+            <div class="sidebar-section" data-image-ai-only>
+              <div class="section-label">PHONG CÁCH ẢNH</div>
+              <select id="imageStyle" class="dark-select"></select>
+            </div>
+            <div class="sidebar-section" data-image-ai-only>
+              <div class="section-label">MẬT ĐỘ CHỮ TRONG ẢNH</div>
+              <select id="imageTextDensity" class="dark-select"></select>
+            </div>
+            <div class="sidebar-section" data-motion-section>
+              <div class="section-label">CHUYỂN ĐỘNG CẢNH</div>
+              <select id="motionPreset" class="dark-select"></select>
+            </div>
+            <div class="sidebar-section">
+              <div class="section-label">HIỆU ỨNG CHUYỂN CẢNH</div>
+              <select id="transitionPreset" class="dark-select"></select>
+            </div>
+          </div>
+
+          <div class="sidebar-tab-panel" data-sidebar-panel="voice">
+            <div class="sidebar-section" data-generated-voice-only>
+              <div class="section-label">NỀN TẢNG GIỌNG ĐỌC</div>
+              <select id="ttsProviderQuick" class="dark-select"></select>
+            </div>
+            <div class="sidebar-section">
+              <div class="section-label">NGÔN NGỮ VIDEO</div>
+              <select id="videoLanguage" class="dark-select"></select>
+            </div>
+            <div class="sidebar-section" data-generated-voice-only>
+              <div class="section-label">TỐC ĐỘ GIỌNG ĐỌC</div>
+              <select id="voiceSpeed" class="dark-select">
+                <option value="0.9">0.9× — Hơi chậm</option>
+                <option value="1.0" selected>1.0× — Bình thường</option>
+                <option value="1.1">1.1× — Hơi nhanh</option>
+              </select>
+            </div>
+            <div class="sidebar-section" data-generated-voice-only>
+              <div class="section-label">GIỌNG ĐỌC</div>
+              <div class="voice-language-label" id="voice-language-label" data-larvoice-voice-ui>Tiếng Việt</div>
+              <select id="larvoiceVoiceId" class="dark-select" data-larvoice-voice-ui></select>
+              <input id="ttsVoiceIdQuick" type="text" class="dark-input tts-voice-id-field" placeholder="Voice ID / voice_code cho provider khác" />
+              <select id="omnivoiceVoiceIdQuick" class="dark-select" data-omnivoice-voice-ui></select>
+              <div class="voice-preview-row">
+                <button type="button" class="btn-ghost-xs" id="btn-preview-voice">Nghe thử</button>
+                <audio id="voice-preview-audio" controls preload="none"></audio>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-tab-panel" data-sidebar-panel="subtitle">
+            <div class="sidebar-section">
+              <div class="section-label">TÙY CHỌN XUẤT VIDEO</div>
+              <label class="toggle-row">
+                <input id="subtitleEnabled" type="checkbox" class="toggle-input" />
+                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                <span class="toggle-text">Bật phụ đề</span>
+              </label>
+              <label class="toggle-row">
+                <input id="generateThumbnailEnabled" type="checkbox" class="toggle-input" />
+                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                <span class="toggle-text">Tạo thumbnail</span>
+              </label>
+              <label class="toggle-row">
+                <input id="generateSeoEnabled" type="checkbox" class="toggle-input" />
+                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                <span class="toggle-text">Tạo SEO YouTube + caption MXH</span>
+              </label>
+            </div>
+            <div class="sidebar-section">
+              <div class="section-label">NHẠC NỀN</div>
+              <div class="logo-row">
+                <span class="logo-name" id="music-display">Chưa có nhạc nền</span>
+                <span class="btn-clear-file" id="btn-clear-music" title="Xóa file này" style="display:none;">&times;</span>
+                <button type="button" class="btn-ghost-xs" id="btn-change-music">Chọn file</button>
+              </div>
+              <div class="volume-row">
+                <span class="sub-label">Âm lượng: <span id="music-volume-label">18%</span></span>
+                <input id="musicVolume" type="range" min="0" max="1" step="0.01" value="0.18" class="volume-slider" />
+              </div>
+            </div>
+            <div class="sidebar-section">
+              <div class="section-label">LOGO</div>
+              <div class="logo-row">
+                <span class="logo-name" id="logo-display">Chưa có logo</span>
+                <span class="btn-clear-file" id="btn-clear-logo" title="Xóa file này" style="display:none;">&times;</span>
+                <button type="button" class="btn-ghost-xs" id="btn-change-logo">Đổi logo</button>
+              </div>
+            </div>
+            <div class="sidebar-section">
+              <div class="section-label">VIDEO ĐẦU</div>
+              <div class="logo-row">
+                <span class="logo-name intro-video-display" id="intro-video-display">Không thêm video</span>
+                <span class="btn-clear-file" id="btn-clear-intro-video" title="Xóa file này" style="display:none;">&times;</span>
+                <button type="button" class="btn-ghost-xs" id="btn-change-intro-video">Chọn file</button>
+              </div>
+              <div class="estimate-text">Nếu chọn, video này sẽ được nối vào đầu video thành phẩm.</div>
+            </div>
+            <div class="sidebar-section">
+              <div class="section-label">VIDEO CUỐI</div>
+              <div class="logo-row">
+                <span class="logo-name outro-video-display" id="outro-video-display">Không nối video</span>
+                <span class="btn-clear-file" id="btn-clear-outro-video" title="Xóa file này" style="display:none;">&times;</span>
+                <button type="button" class="btn-ghost-xs" id="btn-change-outro-video">Chọn file</button>
+              </div>
+              <div class="estimate-text">Nếu chọn, video này sẽ được nối vào cuối video thành phẩm.</div>
+            </div>
+            <div class="config-summary" id="config-summary"></div>
+          </div>
+
+          <button type="submit" class="btn-start">Bắt đầu tạo video</button>
+        </form>
+
+        <!-- History -->
+        <div class="sidebar-history">
+          <div class="history-header">
+            <span class="section-label">LỊCH SỬ DỰ ÁN</span>
+            <div class="history-header-actions">
+              <button id="btn-add-folder" type="button" class="btn-icon" title="Tạo thư mục mới">📁+</button>
+              <button id="delete-all" type="button" class="btn-danger-xs">Xoá tất</button>
+            </div>
+          </div>
+          
+          <div id="folder-create-box" class="folder-create-box" style="display: none;">
+            <input type="text" id="folder-name-input" placeholder="Tên nhóm mới..." class="dark-input-sm">
+            <button type="button" id="btn-save-folder" class="btn-green-sm">Lưu</button>
+            <button type="button" id="btn-cancel-folder" class="btn-secondary-sm">Hủy</button>
+          </div>
+
+          <div id="history-list" class="history-list"></div>
+        </div>
+
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="content">
+
+        <div class="content-sticky-header">
+          <!-- Project header -->
+          <div class="project-header">
+            <div class="project-header-info">
+              <h1 id="project-title">Chưa chọn dự án</h1>
+              <div id="project-folder-assign-wrap" style="display: none; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+                <span style="font-size: 0.85rem; opacity: 0.7;">📁 Thư mục:</span>
+                <select id="project-folder-assign" class="dark-select-sm" style="width: auto;">
+                  <option value="">(Không phân nhóm)</option>
+                </select>
+              </div>
+            </div>
+            <div class="project-header-actions">
+              <button id="render-all-project" type="button" class="btn-secondary">Render lại</button>
+              <button id="resume-project" type="button" class="btn-secondary">Tiếp tục</button>
+              <button id="pause-project" type="button" class="btn-secondary" style="display: none;">Tạm dừng</button>
+              <button id="refresh-project" type="button" class="btn-secondary">Làm mới</button>
+            </div>
+          </div>
+
+          <!-- Status bar -->
+          <div class="status-bar" id="status-bar">
+            <span class="status-dot" id="status-dot"></span>
+            <span id="status-text" class="status-text">Chưa chọn dự án</span>
+          </div>
+        </div>
+
+        <!-- Scene grid (scenes + thumbnail card) -->
+        <div id="scene-list" class="scene-grid"></div>
+        <!-- YouTube panel (video + SEO) -->
+        <div id="final-output"></div>
+
+      </main>
+    </div>
+
+    <!-- Advanced settings modal -->
+    <div id="settings-modal" class="modal-overlay">
+      <div class="modal-dialog settings-modal-dialog">
+        <div class="modal-header">
+          <h2 class="modal-heading">Cài đặt nâng cao</h2>
+          <button id="settings-modal-close" class="modal-close-btn" type="button">✕</button>
+        </div>
+        <div class="settings-tabs" role="tablist" aria-label="Cài đặt nâng cao">
+          <button type="button" class="settings-tab active" data-settings-tab="api" data-api-kind-tab="image-generation">API tạo ảnh</button>
+          <button type="button" class="settings-tab" data-settings-tab="api" data-api-kind-tab="image-search">API tìm ảnh</button>
+          <button type="button" class="settings-tab" data-settings-tab="api" data-api-kind-tab="voice">API voice</button>
+          <button type="button" class="settings-tab" data-settings-tab="api" data-api-kind-tab="llm">API LLM</button>
+          <button type="button" class="settings-tab" data-settings-tab="api" data-api-kind-tab="crawl">API Crawl URL</button>
+          <button type="button" class="settings-tab" data-settings-tab="flow">Flow</button>
+          <button type="button" class="settings-tab" data-settings-tab="style">Style ảnh</button>
+          <button type="button" class="settings-tab" data-settings-tab="html-media">Media HTML</button>
+          <button type="button" class="settings-tab" data-settings-tab="subtitle">Bổ sung</button>
+          <button type="button" class="settings-tab" data-settings-tab="performance">Hiệu năng</button>
+        </div>
+        <div id="settings-form" class="settings-modal-body">
+          <section class="settings-card settings-tab-panel active" data-settings-panel="api">
+            <div class="settings-card-header">
+              <h3>Quản lý API</h3>
+            </div>
+            <input id="apiKeysFileInput" type="file" accept=".txt" style="display:none" />
+            <div class="api-manager">
+              <label class="settings-field api-kind-field is-hidden">
+                <span>Loại API</span>
+                <select id="apiSettingsKind" class="dark-select">
+                  <option value="image-generation">API tạo ảnh</option>
+                  <option value="image-search">API tìm ảnh</option>
+                  <option value="voice">API voice</option>
+                  <option value="llm">API LLM</option>
+                  <option value="crawl">API Crawl URL</option>
+                </select>
+              </label>
+
+              <div class="api-kind-panel active" data-api-kind-panel="image-generation">
+                <div class="settings-grid">
+                  <label class="settings-field">
+                    <span>Nền tảng tạo ảnh</span>
+                    <select id="imageGenerationProvider" class="dark-select">
+                      <option value="chat01">Chat01 / Image</option>
+                    </select>
+                  </label>
+                  <div class="api-provider-help" id="image-generation-provider-help"></div>
+                  <label class="settings-field">
+                    <span>Nền tảng tạo thumbnail</span>
+                    <select id="thumbnailImageProvider" class="dark-select">
+                      <option value="chat01">Chat01 / Image</option>
+                    </select>
+                  </label>
+                  <div class="api-provider-help" id="thumbnail-provider-help"></div>
+                  <label class="settings-field">
+                    <span>Model tạo ảnh</span>
+                    <input id="imageModel" type="text" class="dark-input" placeholder="Mặc định: gpt-5-5" />
+                    <select id="imageModelSelect" class="dark-select is-hidden">
+                      <option value="gpt-5-5">gpt-5-5</option>
+                      <option value="gpt-5-5-thinking">gpt-5-5-thinking</option>
+                    </select>
+                  </label>
+
+                  <label class="settings-field settings-field-wide">
+                    <span>Danh sách khoá API tạo ảnh</span>
+                    <div class="estimate-text" id="image-generation-key-display">Chưa có key</div>
+                    <textarea id="imageGenerationKeysText" rows="5" class="dark-input" placeholder="Dán key của nền tảng tạo ảnh đang chọn, mỗi dòng một key"></textarea>
+                    <button type="button" class="btn-ghost-xs api-upload-btn" data-upload-keys-target="imageGenerationKeysText">Tải file .txt</button>
+                  </label>
+                </div>
+              </div>
+
+              <div class="api-kind-panel" data-api-kind-panel="image-search">
+                <div class="settings-grid">
+                  <label class="settings-field">
+                    <span>Nền tảng tìm ảnh</span>
+                    <select id="apiImageSearchProvider" class="dark-select">
+                      <option value="serper">Serper.dev Images</option>
+                      <option value="pexels">Pexels Photos</option>
+                    </select>
+                  </label>
+                  <div class="api-provider-help" id="image-search-provider-help"></div>
+                  <label class="settings-field settings-field-wide">
+                    <span>Danh sách khoá API</span>
+                    <div class="estimate-text" id="image-search-key-display">Chưa có key</div>
+                    <textarea id="imageSearchKeysText" rows="5" class="dark-input" placeholder="Dán key của nền tảng tìm ảnh đang chọn, mỗi dòng một key"></textarea>
+                    <button type="button" class="btn-ghost-xs api-upload-btn" data-upload-keys-target="imageSearchKeysText">Tải file .txt</button>
+                  </label>
+                  <label class="settings-field settings-field-wide">
+                    <span>URL video Pexels loại trừ</span>
+                    <textarea id="pexelsExcludedVideoUrlsText" rows="5" class="dark-input" placeholder="Mỗi dòng một URL trang video hoặc URL file video từ Pexels"></textarea>
+                    <div class="estimate-text">Các video này bị loại ngay khi chọn video cho từng cảnh.</div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="api-kind-panel" data-api-kind-panel="voice">
+                <div class="settings-grid">
+                  <label class="settings-field">
+                    <span>Nền tảng voice</span>
+                    <select id="ttsProvider" class="dark-select"></select>
+                  </label>
+                  <div class="api-provider-help" id="voice-provider-help"></div>
+                  <label class="settings-field settings-field-wide" data-tts-key-field>
+                    <span>Danh sách khoá API</span>
+                    <div class="estimate-text" id="tts-key-display">Chưa có key</div>
+                    <textarea id="ttsKeysText" rows="5" class="dark-input" placeholder="Dán key của provider voice đang chọn, mỗi dòng một key"></textarea>
+                    <button type="button" class="btn-ghost-xs api-upload-btn" data-upload-keys-target="ttsKeysText">Tải file .txt</button>
+                  </label>
+                  <label class="settings-field" data-tts-config="vbee">
+                    <span>Vbee Project/App ID</span>
+                    <input id="vbeeAppId" type="text" class="dark-input" autocomplete="off" />
+                  </label>
+                  <label class="settings-field" data-tts-config="omnivoice">
+                    <span>URL OmniVoice local</span>
+                    <input id="omnivoiceApiBaseUrl" type="text" class="dark-input" placeholder="http://127.0.0.1:8101" />
+                  </label>
+                  <label class="settings-field settings-field-wide" data-tts-config="omnivoice">
+                    <span>Thiết kế giọng OmniVoice</span>
+                    <input id="omnivoiceInstruct" type="text" class="dark-input" placeholder="female, young adult, moderate pitch" />
+                    <span class="estimate-text">Dùng khi chọn Auto voice. Nếu chọn giọng clone bên dưới, OmniVoice sẽ ưu tiên file mẫu.</span>
+                  </label>
+                  <label class="settings-field" data-tts-config="omnivoice">
+                    <span>Số bước diffusion OmniVoice</span>
+                    <input id="omnivoiceNumStep" type="number" min="8" max="64" step="1" class="dark-input" />
+                  </label>
+                  <div class="settings-field settings-field-wide" data-tts-config="omnivoice">
+                    <span>Giọng OmniVoice của bạn</span>
+                    <input id="omnivoiceVoiceName" type="text" class="dark-input" placeholder="Tên giọng, ví dụ: Giọng Nam Ấm" />
+                    <textarea id="omnivoiceRefText" rows="3" class="dark-input" placeholder="Transcript của audio mẫu, nên nhập đúng nội dung để clone ổn định hơn"></textarea>
+                    <input id="omnivoiceRefAudioFile" type="file" accept="audio/*" hidden />
+                    <div class="custom-style-actions">
+                      <button type="button" class="btn-ghost-xs" id="btn-pick-omnivoice-audio">Chọn audio mẫu</button>
+                      <button type="button" class="btn-secondary" id="btn-save-omnivoice-voice">Thêm giọng</button>
+                    </div>
+                    <div class="estimate-text" id="omnivoice-audio-display">Chưa chọn audio mẫu</div>
+                    <div class="estimate-text" id="omnivoice-voices-list"></div>
+                  </div>
+                  <label class="settings-field" data-tts-config="elevenlabs">
+                    <span>ElevenLabs model</span>
+                    <input id="elevenlabsModelId" type="text" class="dark-input" placeholder="eleven_multilingual_v2" />
+                  </label>
+                  <label class="settings-field" data-tts-config="elevenlabs">
+                    <span>ElevenLabs language code</span>
+                    <input id="elevenlabsLanguageCode" type="text" class="dark-input" placeholder="Tuỳ chọn, ví dụ vi hoặc en" />
+                  </label>
+                </div>
+              </div>
+
+              <div class="api-kind-panel" data-api-kind-panel="llm">
+                <div class="settings-grid">
+                  <label class="settings-field">
+                    <span>Nền tảng LLM</span>
+                    <select id="apiProvider" class="dark-select"></select>
+                  </label>
+                  <div class="api-provider-help" id="llm-provider-help"></div>
+                  <label class="settings-field">
+                    <span>Model LLM</span>
+                    <input id="aiModel" type="text" class="dark-input" placeholder="Mặc định: gpt-5-5-thinking" />
+                    <select id="aiModelSelect" class="dark-select is-hidden">
+                      <option value="gpt-5-5-thinking">gpt-5-5-thinking</option>
+                      <option value="gpt-5-5">gpt-5-5</option>
+                    </select>
+                  </label>
+
+                  <label class="settings-field is-hidden" data-custom-api-field>
+                    <span>Chuẩn API</span>
+                    <select id="customApiStandard" class="dark-select">
+                      <option value="openai">OpenAI-compatible (Chat Completions)</option>
+                      <option value="openai-responses">OpenAI Responses-compatible</option>
+                      <option value="claude">Claude-compatible</option>
+                      <option value="gemini">Gemini-compatible</option>
+                    </select>
+                  </label>
+                  <label class="settings-field settings-field-wide is-hidden" data-custom-api-field>
+                    <span>URL Base</span>
+                    <input id="customApiBaseUrl" type="url" class="dark-input" placeholder="https://api.example.com" />
+                  </label>
+                  <label class="settings-field settings-field-wide is-hidden" data-nine-router-api-field>
+                    <span>9Router URL Base</span>
+                    <input id="nineRouterBaseUrl" type="url" class="dark-input" placeholder="http://127.0.0.1:20128/v1" />
+                  </label>
+                  <label class="settings-field is-hidden" data-claude-max-tokens-field>
+                    <span>Claude max_tokens</span>
+                    <input id="claudeMaxTokens" type="number" min="1024" max="128000" step="1024" class="dark-input" value="16384" />
+                    <span class="estimate-text">Khuyến nghị 16.384. HTML hiện tại trung bình khoảng 5.700 token/cảnh, cảnh lớn nhất khoảng 8.000 token.</span>
+                  </label>
+                  <label class="settings-field">
+                    <span>Số cảnh HTML song song</span>
+                    <input id="htmlConcurrency" type="number" min="1" max="5" step="1" class="dark-input" value="2" />
+                  </label>
+                  <label class="settings-field settings-field-wide" data-llm-key-field>
+                    <span>Danh sách khoá API LLM</span>
+                    <div class="estimate-text" id="llm-key-display">Chưa có key</div>
+                    <textarea id="llmKeysText" rows="5" class="dark-input" placeholder="Dán key của provider LLM đang chọn, mỗi dòng một key"></textarea>
+                    <button type="button" class="btn-ghost-xs api-upload-btn" data-upload-keys-target="llmKeysText">Tải file .txt</button>
+                  </label>
+                </div>
+              </div>
+
+              <div class="api-kind-panel" data-api-kind-panel="crawl">
+                <div class="settings-grid">
+                  <label class="settings-field">
+                    <span>Nền tảng Crawl URL</span>
+                    <select id="apiCrawlProvider" class="dark-select">
+                      <option value="serper">Serper.dev Scrape</option>
+                    </select>
+                  </label>
+                  <div class="api-provider-help" id="crawl-provider-help"></div>
+                  <label class="settings-field settings-field-wide">
+                    <span>Danh sách khoá API</span>
+                    <div class="estimate-text" id="crawl-key-display">Chưa có key</div>
+                    <textarea id="crawlKeysText" rows="5" class="dark-input" placeholder="Dán Serper key, mỗi dòng một key"></textarea>
+                    <button type="button" class="btn-ghost-xs api-upload-btn" data-upload-keys-target="crawlKeysText">Tải file .txt</button>
+                  </label>
+                </div>
+              </div>
+              <div class="api-save-actions">
+                <button type="button" class="btn-secondary" id="btn-save-api-keys">Lưu API</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="settings-card settings-tab-panel" data-settings-panel="flow">
+            <div class="settings-card-header">
+              <h3>Google Flow / Flowkit</h3>
+            </div>
+            <div class="settings-grid">
+              <label class="settings-field settings-field-wide">
+                <span>Flowkit API URL</span>
+                <input id="flowApiBaseUrl" type="url" class="dark-input" placeholder="http://127.0.0.1:8100" />
+                <span class="estimate-text">Flowkit và Chrome extension phải đang chạy, đồng thời đã đăng nhập Google Flow trong Chrome.</span>
+              </label>
+              <label class="settings-field">
+                <span>Model tạo ảnh</span>
+                <select id="flowImageModel" class="dark-select"></select>
+                <span class="estimate-text" id="flow-image-model-note">Nano Banana Pro / Gemini Pix 2 là mặc định khuyến nghị.</span>
+              </label>
+              <label class="settings-field">
+                <span>Model tạo video</span>
+                <select id="flowVideoModel" class="dark-select"></select>
+                <span class="estimate-text" id="flow-video-model-note">Mặc định dùng VEO 3.1 Lite với credit hằng ngày của Flow free.</span>
+              </label>
+              <label class="settings-field">
+                <span>Thời lượng clip Flow mặc định</span>
+                <select id="flowVideoDurationSec" class="dark-select"></select>
+                <span class="estimate-text">Chỉ là duration gửi sang Flow; video cuối vẫn kéo dài/co giãn theo voice.</span>
+              </label>
+              <div class="settings-field settings-field-wide">
+                <span>Bảng model Flow ảnh</span>
+                <div class="estimate-text" id="flow-image-model-catalog">Đang nạp danh sách model...</div>
+              </div>
+              <div class="settings-field settings-field-wide">
+                <span>Bảng model Flow video</span>
+                <div class="estimate-text" id="flow-video-model-catalog">Đang nạp danh sách model...</div>
+              </div>
+              <label class="settings-field">
+                <span>Timeout tạo media (giây)</span>
+                <input id="flowGenerationTimeoutSec" type="number" min="30" max="3600" step="30" class="dark-input" value="900" />
+              </label>
+              <label class="settings-field">
+                <span>Chu kỳ kiểm tra (giây)</span>
+                <input id="flowPollIntervalSec" type="number" min="1" max="30" step="1" class="dark-input" value="5" />
+              </label>
+              <div class="settings-field settings-field-wide">
+                <span>Trạng thái Flow</span>
+                <div class="estimate-text" id="flow-status-display">Chưa kiểm tra kết nối.</div>
+                <div class="custom-style-actions">
+                  <button type="button" class="btn-secondary" id="btn-save-flow">Lưu cấu hình Flow</button>
+                  <button type="button" class="btn-secondary" id="btn-check-flow">Kiểm tra kết nối</button>
+                  <a class="btn-secondary" href="https://labs.google/fx/tools/flow" target="_blank" rel="noreferrer">Mở Google Flow</a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="settings-card settings-tab-panel" data-settings-panel="style">
+            <div class="settings-card-header">
+              <h3>Phong cách ảnh</h3>
+            </div>
+            <div class="custom-style-panel">
+              <select id="styleManagerSelect" class="dark-select"></select>
+              <input id="customStyleName" type="text" class="dark-input" placeholder="Tên phong cách mới" />
+              <textarea id="customStylePrompt" rows="5" class="dark-input" placeholder="Mô tả phong cách bằng tiếng Anh hoặc tiếng Việt. Ví dụ: warm documentary photography, soft natural window light, muted colors, realistic Vietnamese street details..."></textarea>
+              <div class="custom-style-actions">
+                <button type="button" class="btn-secondary" id="btn-save-style">Lưu thay đổi</button>
+                <button type="button" class="btn-secondary danger" id="btn-delete-style">Xoá style này</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="settings-card settings-tab-panel" data-settings-panel="subtitle">
+            <div class="settings-card-header">
+              <h3>Bổ sung</h3>
+            </div>
+            <div class="settings-grid">
+              <label class="settings-field">
+                <span>Font chữ</span>
+                <select id="subtitleFontFamily" class="dark-select"></select>
+              </label>
+              <label class="settings-field">
+                <span>Hiệu ứng chữ</span>
+                <select id="subtitleEffect" class="dark-select"></select>
+              </label>
+              <label class="settings-field">
+                <span>Kiểu chữ</span>
+                <select id="subtitleTextCase" class="dark-select">
+                  <option value="original">Bình thường</option>
+                  <option value="lower">viết thường toàn bộ</option>
+                  <option value="upper">VIẾT HOA TOÀN BỘ</option>
+                  <option value="title">Viết Hoa Chữ Cái Đầu</option>
+                </select>
+              </label>
+              <label class="settings-field">
+                <span>Vị trí trục Y: <span id="subtitle-y-label">86%</span></span>
+                <input id="subtitlePositionY" type="range" min="6" max="94" step="1" value="86" class="volume-slider" />
+              </label>
+              <label class="settings-field">
+                <span>Màu chữ</span>
+                <input id="subtitleColor" type="color" class="color-input" value="#ffffff" />
+              </label>
+              <label class="settings-field">
+                <span>Màu hiệu ứng</span>
+                <input id="subtitleHighlightColor" type="color" class="color-input" value="#ffd84d" />
+              </label>
+              <label class="settings-field">
+                <span>Số chữ tối đa/dòng</span>
+                <input id="subtitleMaxWordsPerLine" type="number" min="1" max="10" step="1" class="dark-input" value="5" />
+              </label>
+              <label class="settings-field">
+                <span>Kích thước: <span id="subtitle-size-label">100%</span></span>
+                <input id="subtitleFontScale" type="range" min="0.7" max="2.4" step="0.05" value="1" class="volume-slider" />
+              </label>
+              <label class="settings-field">
+                <span>Độ trong suốt phụ đề: <span id="subtitle-opacity-label">100%</span></span>
+                <input id="subtitleOpacity" type="range" min="0.1" max="1" step="0.05" value="1" class="volume-slider" />
+              </label>
+              <label class="settings-field">
+                <span>Kích thước logo: <span id="logo-size-label">120px</span></span>
+                <input id="logoSize" type="range" min="40" max="360" step="5" value="120" class="volume-slider" />
+              </label>
+              <label class="settings-field">
+                <span>Vị trí logo</span>
+                <select id="logoPosition" class="dark-select">
+                  <option value="top-left">Trên trái</option>
+                  <option value="top-right">Trên phải</option>
+                  <option value="bottom-left">Dưới trái</option>
+                  <option value="bottom-right">Dưới phải</option>
+                </select>
+              </label>
+              <label class="settings-field">
+                <span>Độ trong suốt logo: <span id="logo-opacity-label">100%</span></span>
+                <input id="logoOpacity" type="range" min="0.1" max="1" step="0.05" value="1" class="volume-slider" />
+              </label>
+              <label class="settings-field">
+                <span>Chữ Watermark (để trống để tắt)</span>
+                <input id="watermarkText" type="text" class="dark-input" placeholder="Video Studio" />
+              </label>
+              <label class="settings-field">
+                <span>Cỡ chữ Watermark: <span id="watermark-size-label">24px</span></span>
+                <input id="watermarkFontSize" type="range" min="14" max="48" step="1" value="24" class="volume-slider" />
+              </label>
+              <label class="settings-field">
+                <span>Độ mờ Watermark: <span id="watermark-opacity-label">30%</span></span>
+                <input id="watermarkOpacity" type="range" min="10" max="100" step="5" value="30" class="volume-slider" />
+              </label>
+              <label class="settings-field">
+                <span>Chế độ di chuyển watermark</span>
+                <select id="watermarkBehavior" class="dark-select">
+                  <option value="continuous">Di chuyển liên tục</option>
+                  <option value="interval" selected>Nhảy vị trí ngẫu nhiên</option>
+                </select>
+              </label>
+              <label class="settings-field" id="field-watermark-speed" style="display:none">
+                <span>Tốc độ di chuyển watermark</span>
+                <select id="watermarkSpeed" class="dark-select">
+                  <option value="slow">Chậm</option>
+                  <option value="medium" selected>Vừa</option>
+                  <option value="fast">Nhanh</option>
+                </select>
+              </label>
+              <label class="settings-field" id="field-watermark-interval">
+                <span>Chu kỳ nhảy watermark: <span id="watermark-interval-label">5s</span></span>
+                <input id="watermarkInterval" type="range" min="1" max="30" step="1" value="5" class="volume-slider" />
+              </label>
+            </div>
+            <div class="subtitle-preview-panel">
+              <div class="subtitle-preview-header">
+                <span>Xem trước</span>
+                <select id="subtitlePreviewMode" class="mini-select">
+                  <option value="all">Tất cả tỉ lệ</option>
+                  <option value="current">Tỉ lệ đang chọn</option>
+                </select>
+              </div>
+              <div class="subtitle-preview-stage" id="subtitle-preview-stage"></div>
+            </div>
+          </section>
+
+          <section class="settings-card settings-tab-panel" data-settings-panel="html-media">
+            <div class="settings-card-header">
+              <h3>Media mặc định cho HTML</h3>
+            </div>
+            <div class="settings-grid">
+              <div class="settings-field settings-field-wide">
+                <span>Sound Effect mặc định cho HTML</span>
+                <div class="logo-row">
+                  <span class="logo-name" id="default-html-sfx-display">Chưa có SFX</span>
+                  <button type="button" class="btn-ghost-xs" id="btn-upload-default-html-sfx">Tải SFX</button>
+                </div>
+                <div class="estimate-text">Các file này được đưa vào prompt HTML như kho âm thanh mặc định cho mọi video.</div>
+              </div>
+              <label class="settings-field settings-field-wide">
+                <span>Mức âm lượng Sound Effect: <span id="html-sfx-volume-label">45%</span></span>
+                <input id="htmlSfxVolume" type="range" min="0" max="1" step="0.01" value="0.45" class="volume-slider" />
+              </label>
+              <div class="settings-field settings-field-wide">
+                <span>Ảnh / icon thương hiệu cho HTML</span>
+                <div class="logo-row">
+                  <span class="logo-name" id="html-brand-assets-display">Chưa có ảnh thương hiệu</span>
+                  <button type="button" class="btn-ghost-xs" id="btn-upload-html-brand-assets">Tải ảnh / icon</button>
+                </div>
+                <div class="estimate-text">Đặt tên file tự mô tả như logo-vang.png, nen-cau-nguyen-sang.jpg để AI chọn đúng ngữ cảnh.</div>
+              </div>
+              <div class="settings-field settings-field-wide">
+                <span>JSON media đưa vào AI</span>
+                <textarea id="html-media-json-text" rows="14" class="dark-input html-media-json" spellcheck="false">{
+  "soundEffects": [],
+  "brandAssets": []
+}</textarea>
+                <div class="custom-style-actions">
+                  <button type="button" class="btn-secondary" id="btn-save-html-media-json">Lưu JSON</button>
+                  <button type="button" class="btn-secondary danger" id="btn-reset-html-media">Reset media</button>
+                </div>
+              </div>
+            </div>
+           </section>
+
+          <section class="settings-card settings-tab-panel" data-settings-panel="performance">
+            <div class="settings-card-header">
+              <h3>Cấu hình hiệu năng kết xuất</h3>
+            </div>
+            <div class="settings-grid">
+              <label class="settings-field">
+                <span>Số luồng render song song (Render Concurrency)</span>
+                <select id="renderConcurrency" class="dark-select">
+                  <option value="1">1 luồng (Cực kỳ an toàn - tiết kiệm tài nguyên)</option>
+                  <option value="2">2 luồng (Khuyên dùng cho máy 8GB-16GB RAM)</option>
+                  <option value="3">3 luồng (Cân bằng - đề xuất)</option>
+                  <option value="4">4 luồng (Dành cho máy mạnh >= 16GB RAM)</option>
+                  <option value="6">6 luồng (Chỉ dùng cho máy Core i7/Ryzen 7 trở lên)</option>
+                  <option value="8">8 luồng (Chỉ dùng cho máy trạm chuyên dụng)</option>
+                </select>
+                <span class="estimate-text">Số lượng phân cảnh được kết xuất đồng thời. Đặt quá cao có thể làm nghẽn CPU và tràn RAM gây đơ máy.</span>
+              </label>
+              <label class="settings-field">
+                <span>Số dự án chạy đồng thời tối đa (Project Concurrency)</span>
+                <select id="projectConcurrency" class="dark-select">
+                  <option value="1">1 dự án (Đề xuất - Tránh quá tải CPU/RAM/API)</option>
+                  <option value="2">2 dự án (Khuyên dùng cho máy mạnh và API ổn định)</option>
+                  <option value="3">3 dự án</option>
+                  <option value="4">4 dự án</option>
+                </select>
+                <span class="estimate-text">Số lượng video/dự án được xử lý song song trong hàng đợi. Đặt 1-2 giúp tránh lỗi quá tải RAM/CPU và bị khóa tài khoản API do gọi quá nhiều yêu cầu cùng lúc.</span>
+              </label>
+              <label class="settings-field">
+                <span>Tốc độ mã hóa video (FFmpeg Preset)</span>
+                <select id="renderPreset" class="dark-select">
+                  <option value="superfast">superfast (Nhanh nhất - dung lượng file lớn hơn)</option>
+                  <option value="veryfast">veryfast (Rất nhanh)</option>
+                  <option value="fast">fast (Nhanh - Cân bằng tốt nhất)</option>
+                  <option value="medium">medium (Trung bình - Chậm nhưng nén tốt)</option>
+                </select>
+                <span class="estimate-text">Cấu hình tốc độ cho bước nén video cuối cùng. Chọn preset nhanh hơn giúp giảm 30-50% thời gian render ghép nhạc/watermark cuối cùng.</span>
+              </label>
+              <div class="api-save-actions">
+                <button type="button" class="btn-secondary" id="btn-save-performance">Lưu hiệu năng</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- JSON sample modal -->
+    <div id="json-modal" class="modal-overlay">
+      <div class="modal-dialog modal-dialog--narrow">
+        <div class="modal-header">
+          <h2 id="json-modal-title" class="modal-heading">Cấu trúc JSON kịch bản</h2>
+          <button id="json-modal-close" class="modal-close-btn" type="button">✕</button>
+        </div>
+        <div class="json-modal-body">
+          <p id="json-modal-desc" class="json-modal-desc">Dán JSON có cấu trúc phù hợp với chế độ nguồn ảnh đang chọn.</p>
+          <pre class="json-sample"><code id="json-sample-code"></code></pre>
+          <div id="json-modal-notes" class="json-modal-notes">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scene edit modal -->
+    <div id="scene-modal" class="modal-overlay">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h2 id="modal-title" class="modal-heading">Cảnh</h2>
+          <button id="modal-close" class="modal-close-btn" type="button">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-col-media" id="modal-media"></div>
+          <div class="modal-col-fields" id="modal-fields"></div>
+        </div>
+        <div class="modal-footer" id="modal-footer"></div>
+      </div>
+    </div>
+
+    <div id="lightbox-modal" class="modal-overlay" style="background: rgba(0, 0, 0, 0.85); cursor: zoom-out;">
+      <div style="position: relative; max-width: 90vw; max-height: 90vh;">
+        <img id="lightbox-img" src="" style="max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 4px; box-shadow: 0 4px 24px rgba(0,0,0,0.8);" />
+        <button id="lightbox-close" style="position: absolute; top: -15px; right: -15px; width: 30px; height: 30px; border-radius: 50%; border: none; background: #fff; color: #000; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.5);">✕</button>
+      </div>
+    </div>
+
+    <!-- License Activation Modal -->
+    <div id="license-modal" class="modal-overlay" style="display: none; z-index: 9999;">
+      <div class="modal-dialog modal-dialog--narrow" style="max-width: 480px;">
+        <div class="modal-header" style="border-bottom: 1px solid var(--line);">
+          <h2 class="modal-heading">Kích hoạt bản quyền</h2>
+        </div>
+        <div class="settings-modal-body" style="padding: 20px;">
+          <p style="font-size: 0.85rem; color: var(--sb-muted); line-height: 1.5; margin-bottom: 16px;">
+            Vui lòng gửi <strong>Mã máy</strong> dưới đây cho quản trị viên để nhận file bản quyền (<code>license.lic</code>), sau đó tải tệp lên để kích hoạt phần mềm.
+          </p>
+          
+          <div style="margin-bottom: 16px;">
+            <label style="font-size: 0.8rem; font-weight: 700; color: var(--sb-text); display: block; margin-bottom: 6px;">MÃ MÁY (MACHINE ID)</label>
+            <div style="display: flex; gap: 8px;">
+              <input id="license-machine-id" type="text" class="dark-input" readonly style="flex: 1; font-family: monospace; font-size: 0.85rem; background: var(--bg);" />
+              <button id="license-copy-machine-id" type="button" class="btn-secondary" style="padding: 0 12px; font-size: 0.85rem;">Copy</button>
+            </div>
+            <div id="license-copy-status" style="font-size: 0.75rem; color: #10b981; margin-top: 4px; display: none;">Đã copy mã máy!</div>
+          </div>
+          
+          <div style="margin-bottom: 20px;">
+            <label style="font-size: 0.8rem; font-weight: 700; color: var(--sb-text); display: block; margin-bottom: 6px;">TẢI FILE BẢN QUYỀN (LICENSE.LIC)</label>
+            <input id="license-file-input" type="file" accept=".lic" style="display: none;" />
+            <button id="license-upload-btn" type="button" class="btn-start" style="margin: 0; background: linear-gradient(135deg, #2563eb, #1d4ed8); height: 40px; min-height: 40px;">Tải lên file license.lic</button>
+            <div id="license-file-name" style="font-size: 0.8rem; color: var(--sb-muted); margin-top: 6px; text-align: center; font-style: italic;">Chưa chọn tệp bản quyền.</div>
+          </div>
+
+          <div id="license-error" style="display: none; padding: 10px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 6px; color: #ef4444; font-size: 0.85rem; margin-bottom: 16px;"></div>
+          <div id="license-success" style="display: none; padding: 10px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px; color: #10b981; font-size: 0.85rem; margin-bottom: 16px; font-weight: 700;">Kích hoạt bản quyền thành công! Ứng dụng sẽ khởi động lại...</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>

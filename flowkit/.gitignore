@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+.env
+output/
+youtube
+agent/active_project.json
+
+# Generated AI tool configs (run: python setup.py)
+.claude/commands/fk:*
+.gemini/commands/
+.fk-setup.json

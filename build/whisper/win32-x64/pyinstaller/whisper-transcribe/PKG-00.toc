@@ -1,0 +1,66 @@
+('D:\\Vibe Tool '
+ 'Video\\build\\whisper\\win32-x64\\pyinstaller\\whisper-transcribe\\whisper-transcribe.pkg',
+ {'BINARY': True,
+  'DATA': True,
+  'EXECUTABLE': True,
+  'EXTENSION': True,
+  'PYMODULE': True,
+  'PYSOURCE': True,
+  'PYZ': False,
+  'SPLASH': True,
+  'SYMLINK': False},
+ [('PYZ-00.pyz',
+   'D:\\Vibe Tool '
+   'Video\\build\\whisper\\win32-x64\\pyinstaller\\whisper-transcribe\\PYZ-00.pyz',
+   'PYZ'),
+  ('struct',
+   'D:\\Vibe Tool '
+   'Video\\build\\whisper\\win32-x64\\pyinstaller\\whisper-transcribe\\localpycs\\struct.pyc',
+   'PYMODULE'),
+  ('pyimod01_archive',
+   'D:\\Vibe Tool '
+   'Video\\build\\whisper\\win32-x64\\pyinstaller\\whisper-transcribe\\localpycs\\pyimod01_archive.pyc',
+   'PYMODULE'),
+  ('pyimod02_importers',
+   'D:\\Vibe Tool '
+   'Video\\build\\whisper\\win32-x64\\pyinstaller\\whisper-transcribe\\localpycs\\pyimod02_importers.pyc',
+   'PYMODULE'),
+  ('pyimod03_ctypes',
+   'D:\\Vibe Tool '
+   'Video\\build\\whisper\\win32-x64\\pyinstaller\\whisper-transcribe\\localpycs\\pyimod03_ctypes.pyc',
+   'PYMODULE'),
+  ('pyimod04_pywin32',
+   'D:\\Vibe Tool '
+   'Video\\build\\whisper\\win32-x64\\pyinstaller\\whisper-transcribe\\localpycs\\pyimod04_pywin32.pyc',
+   'PYMODULE'),
+  ('pyiboot01_bootstrap',
+   'D:\\Vibe Tool '
+   'Video\\build\\whisper\\win32-x64\\venv\\Lib\\site-packages\\PyInstaller\\loader\\pyiboot01_bootstrap.py',
+   'PYSOURCE'),
+  ('pyi_rth_inspect',
+   'D:\\Vibe Tool '
+   'Video\\build\\whisper\\win32-x64\\venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_inspect.py',
+   'PYSOURCE'),
+  ('pyi_rth_pkgutil',
+   'D:\\Vibe Tool '
+   'Video\\build\\whisper\\win32-x64\\venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pkgutil.py',
+   'PYSOURCE'),
+  ('pyi_rth_setuptools',
+   'D:\\Vibe Tool '
+   'Video\\build\\whisper\\win32-x64\\venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_setuptools.py',
+   'PYSOURCE'),
+  ('pyi_rth_multiprocessing',
+   'D:\\Vibe Tool '
+   'Video\\build\\whisper\\win32-x64\\venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_multiprocessing.py',
+   'PYSOURCE'),
+  ('whisper_transcribe',
+   'D:\\Vibe Tool Video\\src\\python\\whisper_transcribe.py',
+   'PYSOURCE')],
+ 'python311.dll',
+ True,
+ False,
+ False,
+ [],
+ None,
+ None,
+ None)
