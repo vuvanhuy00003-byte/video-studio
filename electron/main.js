@@ -525,7 +525,7 @@ function launcherHtml() {
     <header>
       <div class="brand-row">
         <div class="brand">
-          <h1>Video Studio</h1>
+          <h1>Video Studio <span style="font-size: 14px; font-weight: normal; opacity: 0.6; margin-left: 8px; vertical-align: middle;">v${app.getVersion()}</span></h1>
           <p>Hãy giữ cửa sổ này mở trong khi làm việc. Giao diện tạo video dùng trong trình duyệt; các dịch vụ local chỉ bật khi quy trình cần.</p>
         </div>
         <button type="button" class="primary-button" data-open-url="http://localhost:3000">Mở Giao diện Web</button>
