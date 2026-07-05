@@ -92,10 +92,11 @@ def _resolve_video_model_key(model_key: str, gen_type: str, aspect_ratio: str, d
     if model_family == "veo_3_1_fast":
         is_tier_one = user_paygate_tier == "PAYGATE_TIER_ONE"
         ultra_suffix = "" if is_tier_one else "_ultra"
+        portrait_suffix = "_portrait" if is_portrait else ""
         if gen_type == "text_to_video":
             if duration_seconds == 8:
                 return f"veo_3_1_t2v_fast_portrait{ultra_suffix}" if is_portrait else f"veo_3_1_t2v_fast{ultra_suffix}"
-            return f"veo_3_1_t2v_fast_{duration_seconds}s"
+            return f"veo_3_1_t2v_fast{portrait_suffix}{ultra_suffix}_{duration_seconds}s"
         if gen_type == "reference_frame_2_video":
             if is_tier_one:
                 return "veo_3_1_r2v_fast_portrait" if is_portrait else "veo_3_1_r2v_fast"
@@ -104,10 +105,10 @@ def _resolve_video_model_key(model_key: str, gen_type: str, aspect_ratio: str, d
         if gen_type == "start_end_frame_2_video":
             if duration_seconds == 8:
                 return f"veo_3_1_i2v_s_fast_portrait{ultra_suffix}_fl" if is_portrait else f"veo_3_1_i2v_s_fast{ultra_suffix}_fl"
-            return f"veo_3_1_i2v_s_fast_{duration_seconds}s_fl"
+            return f"veo_3_1_i2v_s_fast{portrait_suffix}{ultra_suffix}_{duration_seconds}s_fl"
         if duration_seconds == 8:
             return f"veo_3_1_i2v_s_fast_portrait{ultra_suffix}" if is_portrait else f"veo_3_1_i2v_s_fast{ultra_suffix}"
-        return f"veo_3_1_i2v_s_fast_{duration_seconds}s"
+        return f"veo_3_1_i2v_s_fast{portrait_suffix}{ultra_suffix}_{duration_seconds}s"
 
     if model_family == "veo_3_1_quality":
         if gen_type == "text_to_video":

@@ -17,15 +17,15 @@
     "PAYGATE_TIER_ONE": {
       "frame_2_video": {
         "VIDEO_ASPECT_RATIO_LANDSCAPE": "veo_3_1_fast",
-        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_fast"
+        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_lite"
       },
       "start_end_frame_2_video": {
         "VIDEO_ASPECT_RATIO_LANDSCAPE": "veo_3_1_fast",
-        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_fast"
+        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_lite"
       },
       "reference_frame_2_video": {
         "VIDEO_ASPECT_RATIO_LANDSCAPE": "veo_3_1_fast",
-        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_fast"
+        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_lite"
       }
     },
     "PAYGATE_TIER_NOT_PAID": {
