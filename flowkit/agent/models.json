@@ -16,16 +16,16 @@
     },
     "PAYGATE_TIER_ONE": {
       "frame_2_video": {
-        "VIDEO_ASPECT_RATIO_LANDSCAPE": "veo_3_1_fast",
-        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_lite"
+        "VIDEO_ASPECT_RATIO_LANDSCAPE": "abra",
+        "VIDEO_ASPECT_RATIO_PORTRAIT": "abra"
       },
       "start_end_frame_2_video": {
-        "VIDEO_ASPECT_RATIO_LANDSCAPE": "veo_3_1_fast",
-        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_lite"
+        "VIDEO_ASPECT_RATIO_LANDSCAPE": "abra",
+        "VIDEO_ASPECT_RATIO_PORTRAIT": "abra"
       },
       "reference_frame_2_video": {
-        "VIDEO_ASPECT_RATIO_LANDSCAPE": "veo_3_1_fast",
-        "VIDEO_ASPECT_RATIO_PORTRAIT": "veo_3_1_lite"
+        "VIDEO_ASPECT_RATIO_LANDSCAPE": "abra",
+        "VIDEO_ASPECT_RATIO_PORTRAIT": "abra"
       }
     },
     "PAYGATE_TIER_NOT_PAID": {
