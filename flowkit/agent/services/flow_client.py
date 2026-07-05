@@ -58,7 +58,7 @@ def _resolve_image_model_name(model_name: str, has_image_inputs: bool = False) -
     return _FLOW_IMAGE_FAMILY_KEYS.get(model_name, model_name)
 
 
-def _resolve_video_model_key(model_key: str, gen_type: str, aspect_ratio: str, duration_seconds: int) -> str:
+def _resolve_video_model_key(model_key: str, gen_type: str, aspect_ratio: str, duration_seconds: int, user_paygate_tier: str = "PAYGATE_TIER_TWO") -> str:
     model_family = _FLOW_VIDEO_FAMILY_ALIASES.get(model_key, model_key)
     if model_family not in _FLOW_VIDEO_FAMILY_DURATIONS:
         return model_key
@@ -90,18 +90,23 @@ def _resolve_video_model_key(model_key: str, gen_type: str, aspect_ratio: str, d
         return f"veo_3_1_i2v_s_lite_{duration_seconds}s{low}"
 
     if model_family == "veo_3_1_fast":
+        is_tier_one = user_paygate_tier == "PAYGATE_TIER_ONE"
+        ultra_suffix = "" if is_tier_one else "_ultra"
         if gen_type == "text_to_video":
             if duration_seconds == 8:
-                return "veo_3_1_t2v_fast_portrait_ultra" if is_portrait else "veo_3_1_t2v_fast_ultra"
+                return f"veo_3_1_t2v_fast_portrait{ultra_suffix}" if is_portrait else f"veo_3_1_t2v_fast{ultra_suffix}"
             return f"veo_3_1_t2v_fast_{duration_seconds}s"
         if gen_type == "reference_frame_2_video":
-            return "veo_3_1_r2v_fast_portrait_ultra" if is_portrait else "veo_3_1_r2v_fast_landscape_ultra"
+            if is_tier_one:
+                return "veo_3_1_r2v_fast_portrait" if is_portrait else "veo_3_1_r2v_fast"
+            else:
+                return "veo_3_1_r2v_fast_portrait_ultra" if is_portrait else "veo_3_1_r2v_fast_landscape_ultra"
         if gen_type == "start_end_frame_2_video":
             if duration_seconds == 8:
-                return "veo_3_1_i2v_s_fast_portrait_ultra_fl" if is_portrait else "veo_3_1_i2v_s_fast_ultra_fl"
+                return f"veo_3_1_i2v_s_fast_portrait{ultra_suffix}_fl" if is_portrait else f"veo_3_1_i2v_s_fast{ultra_suffix}_fl"
             return f"veo_3_1_i2v_s_fast_{duration_seconds}s_fl"
         if duration_seconds == 8:
-            return "veo_3_1_i2v_s_fast_portrait_ultra" if is_portrait else "veo_3_1_i2v_s_fast_ultra"
+            return f"veo_3_1_i2v_s_fast_portrait{ultra_suffix}" if is_portrait else f"veo_3_1_i2v_s_fast{ultra_suffix}"
         return f"veo_3_1_i2v_s_fast_{duration_seconds}s"
 
     if model_family == "veo_3_1_quality":
@@ -509,7 +514,7 @@ class FlowClient:
             return {"error": f"No model for tier={user_paygate_tier} type={gen_type} ratio={aspect_ratio}"}
 
         duration_seconds = _normalize_duration_seconds(duration_seconds, model_key=model_key)
-        resolved_model_key = _resolve_video_model_key(model_key, gen_type, aspect_ratio, duration_seconds)
+        resolved_model_key = _resolve_video_model_key(model_key, gen_type, aspect_ratio, duration_seconds, user_paygate_tier)
         request = {
             "aspectRatio": aspect_ratio,
             "seed": int(time.time()) % 10000,
@@ -552,7 +557,7 @@ class FlowClient:
             return {"error": f"No model for tier={user_paygate_tier} type={gen_type} ratio={aspect_ratio}"}
 
         duration_seconds = _normalize_duration_seconds(duration_seconds, model_key=model_key)
-        resolved_model_key = _resolve_video_model_key(model_key, gen_type, aspect_ratio, duration_seconds)
+        resolved_model_key = _resolve_video_model_key(model_key, gen_type, aspect_ratio, duration_seconds, user_paygate_tier)
         request = {
             "aspectRatio": aspect_ratio,
             "seed": int(time.time()) % 10000,
@@ -597,7 +602,7 @@ class FlowClient:
             return {"error": f"No model for tier={user_paygate_tier} type={gen_type} ratio={aspect_ratio}"}
 
         duration_seconds = _normalize_duration_seconds(duration_seconds, model_key=model_key)
-        resolved_model_key = _resolve_video_model_key(model_key, gen_type, aspect_ratio, duration_seconds)
+        resolved_model_key = _resolve_video_model_key(model_key, gen_type, aspect_ratio, duration_seconds, user_paygate_tier)
         request = {
             "aspectRatio": aspect_ratio,
             "seed": int(time.time()) % 10000,
